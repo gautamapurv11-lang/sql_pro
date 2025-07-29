@@ -1,0 +1,113 @@
+#-- Social Media Addiction Project (Using SQL, Power BI, and Excel)
+SELECT * FROM _25_social_media_addiction.`students social media addiction`;
+
+# -- What percentage of people reported low, medium, or high addiction scores?
+# 	-- For each group, what is the average:
+# 		-- Level of conflict caused by social media
+# 		-- Sleep hours per night
+# 		-- Mental health score
+# 		-- Daily social media usage
+# -- <= 3 (Low), <=6 (Medium), >6 (High)
+SELECT
+	case
+		when Addicted_Score <= 3 then 'Low'
+        when Addicted_Score <= 6 then 'Medium'
+		else 'High'
+	end as addicted_status,
+    count(Student_ID) as student_count,
+    round(avg(Conflicts_Over_Social_Media),2) as avg_conflict_over_socials,
+    round(avg(Sleep_Hours_Per_Night),2) as avg_sleep_hrs,
+    round(avg(Mental_Health_Score),2) as avg_mental_health_score,
+    round(avg(Avg_Daily_Usage_Hours),2) as avg_daily_usage
+FROM _25_social_media_addiction.`students social media addiction`
+group by 1
+;
+
+# -- Among people with high and/or medium addiction levels, what is the distribution by:
+# 		-- Country
+With summary as (
+SELECT
+	*,
+    	case
+		when Addicted_Score <= 3 then 'Low'
+        when Addicted_Score <= 6 then 'Medium'
+		else 'High'
+	end as addicted_status
+ FROM _25_social_media_addiction.`students social media addiction`
+ )
+
+ select
+	Country,
+    count(Student_ID) as student_count
+ from summary
+ where addicted_status = 'High'
+ group by Country
+ order by 2 desc
+ limit 10
+ ;
+
+		# -- Platform
+
+    With summary as (
+SELECT
+	*,
+    	case
+		when Addicted_Score <= 3 then 'Low'
+        when Addicted_Score <= 6 then 'Medium'
+		else 'High'
+	end as addicted_status
+ FROM _25_social_media_addiction.`students social media addiction`
+ )
+
+ select
+	Most_Used_Platform,
+    count(Student_ID) as student_count
+ from summary
+ where addicted_status = 'High'
+ group by 1
+ order by 2 desc
+ limit 10
+ ;
+
+# -- Among people with high and/or medium addiction levels:
+# 		-- What percentage are male vs. female?
+With summary as (
+SELECT
+	*,
+    	case
+		when Addicted_Score <= 3 then 'Low'
+        when Addicted_Score <= 6 then 'Medium'
+		else 'High'
+	end as addicted_status
+ FROM _25_social_media_addiction.`students social media addiction`
+ )
+
+ select
+	Gender,
+    count(Student_ID) as student_count
+ from summary
+ where addicted_status = 'High'
+ group by 1
+ order by 2 desc
+ ;
+		# -- Distribution by Academic Level?
+With summary as (
+SELECT
+	*,
+    	case
+		when Addicted_Score <= 3 then 'Low'
+        when Addicted_Score <= 6 then 'Medium'
+		else 'High'
+	end as addicted_status
+ FROM _25_social_media_addiction.`students social media addiction`
+ )
+
+ select
+	Academic_Level,
+    count(Student_ID) as student_count
+ from summary
+ where addicted_status = 'High'
+ group by 1
+ order by 2 desc
+ ;
+
